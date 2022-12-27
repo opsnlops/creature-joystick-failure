@@ -1,28 +1,24 @@
 
-#include <cstdio>
-#include <cstdarg>
-#include <cstring>
+#include <stdio.h>
+#include <stdarg.h>
+#include <string.h>
 
 #include <FreeRTOS.h>
 #include <queue.h>
 #include "pico/time.h"
 
-#include "tasks.h"
 #include "logging.h"
 
 
-extern TaskHandle_t log_queue_reader_task_handle;   // in main.cpp
 
+TaskHandle_t log_queue_reader_task_handle;
 QueueHandle_t creature_log_message_queue_handle;
-
 
 bool logging_queue_exists = false;
 
 
-
-
 void logger_init() {
-    creature_log_message_queue_handle = xQueueCreate(LOGGING_QUEUE_LENGTH, sizeof(LogMessage));
+    creature_log_message_queue_handle = xQueueCreate(LOGGING_QUEUE_LENGTH, sizeof(struct LogMessage));
     vQueueAddToRegistry(creature_log_message_queue_handle, "log_message_queue");
     logging_queue_exists = true;
     start_log_reader();
@@ -116,7 +112,7 @@ struct LogMessage createMessageObject(uint8_t level, const char *message, va_lis
 
     vsnprintf(buffer, LOGGING_MESSAGE_MAX_LENGTH, message, args);
 
-    LogMessage lm{};
+    struct LogMessage lm;
     lm.level = level;
     memcpy(lm.message, buffer, LOGGING_MESSAGE_MAX_LENGTH);
     return lm;
@@ -126,7 +122,7 @@ void start_log_reader() {
     xTaskCreate(log_queue_reader_task,
                 "log_queue_reader_task",
                 1512,
-                nullptr,
+                NULL,
                 1,
                 &log_queue_reader_task_handle);
 }
@@ -142,7 +138,7 @@ void start_log_reader() {
 
 portTASK_FUNCTION(log_queue_reader_task, pvParameters) {
 
-    LogMessage lm{};
+    struct LogMessage lm;
     char levelBuffer[4];
     memset(&levelBuffer, '\0', 4);
 

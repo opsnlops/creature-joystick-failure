@@ -1,10 +1,19 @@
 
 #pragma once
 
+// Mark this as being in C to C++ apps
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 #include "controller-config.h"
 
-#include <cstring>
-#include <cstdio>
+#include <FreeRTOS.h>
+#include <task.h>
+
+#include <string.h>
+#include <stdio.h>
 
 #define LOG_LEVEL_VERBOSE 5
 #define LOG_LEVEL_DEBUG 4
@@ -13,6 +22,7 @@
 #define LOG_LEVEL_ERROR 1
 #define LOG_LEVEL_FATAL 0
 
+portTASK_FUNCTION_PROTO(log_queue_reader_task, pvParameters);
 
 struct LogMessage {
     uint8_t level;
@@ -34,7 +44,11 @@ void error(const char *message, ...);
 
 void __unused fatal(const char *message, ...);
 
-LogMessage createMessageObject(uint8_t level, const char *message, va_list args);
+struct LogMessage createMessageObject(uint8_t level, const char *message, va_list args);
 
 
 void start_log_reader();
+
+#ifdef __cplusplus
+}
+#endif
