@@ -16,11 +16,13 @@ pico_sdk_init()
 # Set up our includes
 include_directories(
         src/
+        rp2040-gamecon/include
         )
 
 # Our source files
 file(GLOB sourceFiles
         src/*
+        src/joystick/*
         src/logging/*
         )
 
@@ -35,17 +37,18 @@ target_include_directories(joystick PRIVATE
         )
 
 add_subdirectory(pico-ssd1306)
+add_subdirectory(rp2040-gamecon)
 
 
 # pull in common dependencies
 target_link_libraries(joystick
         FreeRTOS-Kernel
         FreeRTOS-Kernel-Heap4
-        hardware_dma
+        hardware_adc
         hardware_gpio
-        hardware_pio
-        hardware_pwm
         hardware_uart
+        tinyusb_device
+        tinyusb_board
         pico_stdlib
         pico_ssd1306
         )

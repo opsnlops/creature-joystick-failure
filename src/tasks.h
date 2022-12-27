@@ -12,4 +12,4 @@
 
 
 portTASK_FUNCTION_PROTO(log_queue_reader_task, pvParameters);       // used in logging/logging.cpp
-
+portTASK_FUNCTION_PROTO(joystick_reader_task, pvParameters);        // used in joystick/reader.cpp

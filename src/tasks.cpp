@@ -7,10 +7,5 @@
 
 
 
-TaskHandle_t displayUpdateTaskHandle;
+TaskHandle_t joystick_reader_task_handle;
 TaskHandle_t log_queue_reader_task_handle;
-
-
-#ifdef USE_UART_CONTROL
-TaskHandle_t messageQueueReaderTaskHandle;
-#endif

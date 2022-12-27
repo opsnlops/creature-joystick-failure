@@ -2,3 +2,4 @@
 cmake-*
 build/
 pico-ssd1306
+rp2040-gamecon
