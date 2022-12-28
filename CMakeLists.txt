@@ -13,12 +13,6 @@ set(CMAKE_CXX_STANDARD 17)
 # Initialize the SDK
 pico_sdk_init()
 
-# Set up our includes
-include_directories(
-        src/
-        rp2040-gamecon/include
-        )
-
 # Our source files
 file(GLOB sourceFiles
         src/*
@@ -26,29 +20,28 @@ file(GLOB sourceFiles
         src/logging/*
         )
 
-add_executable(joystick
+add_executable(joystick)
+
+target_sources(joystick PUBLIC
         ${sourceFiles}
-        FreeRTOSConfig.h
         )
 
-target_include_directories(joystick PRIVATE
+target_include_directories(joystick PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/src
         .
-        ${CMAKE_CURRENT_LIST_DIR}
         )
 
 add_subdirectory(pico-ssd1306)
-add_subdirectory(rp2040-gamecon)
-
 
 # pull in common dependencies
-target_link_libraries(joystick
+target_link_libraries(joystick PUBLIC
         FreeRTOS-Kernel
         FreeRTOS-Kernel-Heap4
+        tinyusb_board
+        tinyusb_device
         hardware_adc
         hardware_gpio
         hardware_uart
-        tinyusb_device
-        tinyusb_board
         pico_stdlib
         pico_ssd1306
         )
